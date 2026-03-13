@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Dibujos</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Point & <span class="highlight">Paint</span></h1>
+            <p>Galería interactiva</p>
+        </div>
+        <button id="refreshBtn" class="refresh-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 1 0 2.6-6.4L2 10"></path></svg>
+            Refrescar
+        </button>
+    </header>
+
+    <main class="gallery-container">
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <p>Cargando obras de arte...</p>
+        </div>
+        <div id="gallery" class="gallery-grid">
+            <!-- Images will be injected here via JavaScript -->
+        </div>
+        <div id="empty-state" class="empty-state hidden">
+            <h2>No hay dibujos todavía</h2>
+            <p>Ponte a dibujar en python para verlos aquí.</p>
+        </div>
+        <div id="error-state" class="error-state hidden">
+            <h2>Error de conexión</h2>
+            <p>No se pudo conectar con la base de datos.</p>
+        </div>
+    </main>
+
+    <!-- Modal para ver imagen completa -->
+    <div id="imageModal" class="modal hidden">
+        <span class="close-btn">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div id="modalCaption" class="modal-caption"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
