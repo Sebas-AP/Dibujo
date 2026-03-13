@@ -45,8 +45,8 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=1, min_detection_confidence=0.85, min_tracking_confidence=0.8)
 mp_draw = mp.solutions.drawing_utils
 
-# Colores (BGR): Azul, Verde, Rojo, Amarillo, Borrador (Negro)
-colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255), (0, 0, 0)]
+# Colores (BGR): Azul, Verde, Rojo, Amarillo, Blanco, Negro, Naranja, Borrador
+colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (0, 255, 255), (255, 255, 255), (25, 25, 25), (0, 165, 255), (0, 0, 0)]
 color_idx = 0
 brush_thickness = 5
 eraser_thickness = 50
@@ -73,10 +73,12 @@ while cap.isOpened():
 
     # Dibujar Interfaz de Usuario (Menú de Colores)
     cv2.rectangle(frame, (0, 0), (w, 80), (30, 30, 30), -1)
-    etiquetas = ["Azul", "Verde", "Rojo", "Amarillo", "Goma"]
+    etiquetas = ["Azul", "Verde", "Rojo", "Amar.", "Blanco", "Negro", "Naran.", "Goma"]
     for i, col in enumerate(colors):
-        cv2.rectangle(frame, (10 + i*125, 10), (120 + i*125, 70), col, -1)
-        cv2.putText(frame, etiquetas[i], (25 + i*125, 45), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2)
+        cv2.rectangle(frame, (10 + i*80, 10), (80 + i*80, 70), col, -1)
+        # Usar texto oscuro para colores claros (amarillo, blanco) y blanco para el resto
+        text_color = (0, 0, 0) if i in [3, 4] else (255, 255, 255)
+        cv2.putText(frame, etiquetas[i], (15 + i*80, 45), cv2.FONT_HERSHEY_SIMPLEX, 0.4, text_color, 1)
 
     if results.multi_hand_landmarks:
         for hand_landmarks in results.multi_hand_landmarks:
@@ -98,18 +100,16 @@ while cap.isOpened():
                 cv2.circle(frame, (ix, iy), 15, colors[color_idx], cv2.FILLED)
                 
                 if iy < 80: # Si el dedo está en el área del menú
-                    if 10 < ix < 120: color_idx = 0
-                    elif 135 < ix < 245: color_idx = 1
-                    elif 260 < ix < 370: color_idx = 2
-                    elif 385 < ix < 495: color_idx = 3
-                    elif 510 < ix < 620: color_idx = 4
+                    for c_i in range(len(colors)):
+                        if 10 + c_i*80 < ix < 80 + c_i*80:
+                            color_idx = c_i
 
             # MODO DIBUJO: Solo Índice arriba
             elif fingers[0] and not fingers[1]:
                 if px == 0 and py == 0:
                     px, py = ix, iy
 
-                thickness = eraser_thickness if color_idx == 4 else brush_thickness
+                thickness = eraser_thickness if color_idx == 7 else brush_thickness
                 cv2.line(canvas, (px, py), (ix, iy), colors[color_idx], thickness)
                 
                 px, py = ix, iy
